@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        _textPesan = findViewById(R.id.textpesan);
         initKirimButton();
     }
 
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("E-mail Form")
-                        .setContentText("E-mail sudah dikirim kepada anda")
+                        .setContentText("E-mail sudah dikirim kepada anda" + pesan)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setChannelId(channel.getId());
 
