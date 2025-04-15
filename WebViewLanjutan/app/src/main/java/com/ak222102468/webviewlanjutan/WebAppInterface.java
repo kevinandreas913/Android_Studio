@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
 import android.widget.Toast;
 import android.net.Uri;
 
@@ -43,6 +44,15 @@ public class WebAppInterface {
         } catch (Exception e) {
             Toast.makeText(_context, "WhatsApp tidak terinstal atau terjadi error", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @JavascriptInterface
+    public void showAngularPage()
+    {
+        _activity.runOnUiThread(() -> {
+            WebView webView = _activity.findViewById(R.id.webView1);
+            webView.loadUrl("https://stmikpontianak.cloud/011100862/angular011100862");
+        });
     }
 
 }

@@ -1,22 +1,25 @@
-package com.ak222102468.webviewlanjutan;
+package com.ak222102468.webviewanggular;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-    
-    private WebView _webView1;
-    
+
+    private WebView _webViewAnggular;
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,35 +31,29 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        
-        _webView1 = findViewById(R.id.webView1);
 
-        WebViewClient webViewClient = new WebViewClient();
-        _webView1.setWebViewClient(webViewClient);
+        _webViewAnggular = findViewById(R.id.webViewAnggular);
 
-        WebChromeClient  webChromeClient = new WebChromeClient();
-        _webView1.setWebChromeClient(webChromeClient);
-
-        WebSettings webSettings = _webView1.getSettings();
+        // Aktifkan JavaScript
+        WebSettings webSettings = _webViewAnggular.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        webSettings.setDomStorageEnabled(true);
-        
-        WebAppInterface webAppInterface = new WebAppInterface(this, this);
-        _webView1.addJavascriptInterface(webAppInterface, "Android");
-        
-//        String url = "https://stmikpontianak.cloud/011100862/webview_lanjutan.html";
-        String url = "file:///android_asset/webview_lanjutan.html";
-        _webView1.loadUrl(url);
+
+        // Buka dalam aplikasi
+        _webViewAnggular.setWebViewClient(new WebViewClient());
+        _webViewAnggular.loadUrl("https://stmikpontianak.cloud/011100862/angular011100862");
+
+        WebAppInterface WebAppInterface = new WebAppInterface(this, this);
+        _webViewAnggular.addJavascriptInterface(WebAppInterface, "Android");
 
     }
 
+    // back
     @Override
     public void onBackPressed() {
-        if (_webView1.canGoBack()) {
-            _webView1.goBack();
+        if (_webViewAnggular.canGoBack()) {
+            _webViewAnggular.goBack();
         } else {
             super.onBackPressed();
         }
     }
-    
 }

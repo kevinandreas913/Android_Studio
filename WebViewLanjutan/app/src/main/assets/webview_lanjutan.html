@@ -72,6 +72,14 @@
 				alert("Android interface not found");
 			}
 		}
+        function showWebAnggular()
+        {
+            if (typeof Android !== "undefined" || Android !== null) {
+                Android.showAngularPage();
+            } else {
+                alert("Android interface not found");
+            }
+        }
 	</script>
 </head>
 <body class="p-4 bg-light">
@@ -102,6 +110,9 @@
 		<button class="btn btn-info" onclick="showWhatsApp();">
 			Kirim pesan WhatsApp ke Andi
 		</button>
+        <button class="btn btn-info" onclick="showWebAnggular();">
+          Buka anggular
+        </button>
       </div>
 
       <div class="mb-4">
