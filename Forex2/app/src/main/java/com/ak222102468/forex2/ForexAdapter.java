@@ -19,9 +19,12 @@ public class ForexAdapter extends RecyclerView.Adapter<ForexViewHolder> {
     private JSONObject _rates;
     private JSONArray _names;
 
-    public ForexAdapter(JSONObject rates){
+    private JSONObject _currencyNames;
+
+    public ForexAdapter(JSONObject rates, JSONObject currencyNames){
         this._rates = rates;
-        _names = rates.names();
+        this._names = rates.names();
+        this._currencyNames = currencyNames;
     }
 
     @NonNull
@@ -34,24 +37,50 @@ public class ForexAdapter extends RecyclerView.Adapter<ForexViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ForexViewHolder holder, int position) {
-        try{
-            String kode = _names.get(position).toString();
+        try {
+            String kode = _names.get(position).toString(); // misalnya: AUD
             holder.kodeTextView.setText(kode);
 
             double kurs = _rates.getDouble(kode);
             double USD = _rates.getDouble("USD");
             double IDR = _rates.getDouble("IDR");
 
-            double baseIDR = USD/kurs*IDR;
+            double baseIDR = USD / kurs * IDR;
 
             DecimalFormat decimalFormat = new DecimalFormat("###,##0.##");
-            String kurs_2 = decimalFormat.format(baseIDR);
-            holder.kursTextView.setText(kurs_2);
-        } catch (JSONException e){
-            Log.e("*tw*", e.getMessage());
-            return;
+            String kursformat = decimalFormat.format(baseIDR);
+            holder.kursTextView.setText(kursformat); // nilai rupiah
+
+            // ambil nama dari JSON (jika ada), atau fallback ke "Unknown Currency"
+            String nama = _currencyNames.optString(kode, "Unknown Currency");
+            holder.namaTextView.setText(nama);
+
+        } catch (JSONException e) {
+            Log.e("*tw*", "JSON error: " + e.getMessage());
         }
     }
+
+
+//    @Override
+//    public void onBindViewHolder(@NonNull ForexViewHolder holder, int position) {
+//        try{
+//            String kode = _names.get(position).toString();
+//            holder.kodeTextView.setText(kode);
+//
+//            double kurs = _rates.getDouble(kode);
+//            double USD = _rates.getDouble("USD");
+//            double IDR = _rates.getDouble("IDR");
+//
+//            double baseIDR = USD/kurs*IDR;
+//
+//            DecimalFormat decimalFormat = new DecimalFormat("###,##0.##");
+//            String kurs_2 = decimalFormat.format(baseIDR);
+//            holder.kursTextView.setText(kurs_2);
+//        } catch (JSONException e){
+//            Log.e("*tw*", e.getMessage());
+//            return;
+//        }
+//    }
 
     @Override
     public int getItemCount() {

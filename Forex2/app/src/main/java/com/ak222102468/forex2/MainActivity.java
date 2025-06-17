@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout _swipeRefreshLayout1;
     private RecyclerView _recyclerView1;
     private TextView _timestampTextView;
+    private JSONObject _currencyNames;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +48,36 @@ public class MainActivity extends AppCompatActivity {
         _recyclerView1 = findViewById(R.id.recyclerView1);
         _timestampTextView = findViewById(R.id.timestampTextView);
 
-        bindRecyclerView();
+//        bindRecyclerView();
+        fetchCurrencyNamesAndBind();
     }
+
+    private void fetchCurrencyNamesAndBind() {
+        String url = "https://openexchangerates.org/api/currencies.json";
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        client.get(url, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                try {
+                    String json = new String(responseBody);
+                    _currencyNames = new JSONObject(json);
+
+                    // Setelah dapat nama mata uang, ambil data kurs
+                    bindRecyclerView(); // Akan dipanggil setelah nama mata uang tersedia
+                } catch (JSONException e) {
+                    Toast.makeText(MainActivity.this, "JSON Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(MainActivity.this, "Gagal ambil nama mata uang", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     private void bindRecyclerView() {
         String url = "https://openexchangerates.org/api/latest.json?app_id=e4b1eb257da840c29507248a5716a38e";
@@ -79,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
                 setTimestamp(timestamp);
 
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-                ForexAdapter adapter = new ForexAdapter(rates);
+                ForexAdapter adapter = new ForexAdapter(rates, _currencyNames);
+//                ForexAdapter adapter = new ForexAdapter(rates);
                 _recyclerView1.setLayoutManager(layoutManager);
                 _recyclerView1.setAdapter(adapter);
 
